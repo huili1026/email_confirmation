@@ -9,7 +9,7 @@ var appRoutes = require("./app/routes/routes")(router);
 app.use(morgan('dev'));  // log request
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended:true }));
-app.use(appRoutes);
+app.use('/api', appRoutes);
 
 app.get('/home', function(req, res){
   res.send("hello from home");
