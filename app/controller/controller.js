@@ -9,6 +9,7 @@ exports.create = async (req, res) => {
         message: "Content can not be empty!"
       });
     }
+
     var value = req.body.password.toString();
     const salt = bcrypt.genSalt(10);
     var hash = await bcrypt.hash(value, parseInt(salt));
