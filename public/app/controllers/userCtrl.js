@@ -1,10 +1,23 @@
 angular.module('userControllers', [])
-.controller('regCtrl', function($http) {
+.controller('regCtrl', function($http, $location, $timeout) {
+    var app = this;
     this.regUser = function(regData) { 
-        console.log("data submmited ");
+        app.errorMsg = false;
+        app.loading = true;
+        console.log("data submmited!");
         $http.post('/api',this.regData).then(function(data){
-            console.log(data);
-        });
 
+            if (data.data.success) {
+                app.loading = false;
+                app.successMsg = data.data.message + '...Redirecting';
+
+                $timeout(function(){
+                    $location.path("/");
+                }, 2000);
+            } else {
+                app.loading = false;
+                app.errorMsg = data.data.message;
+            }
+        });
      };
 });

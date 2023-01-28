@@ -81,26 +81,36 @@
     </style>
 
   </head>
-  <body ng-app="userApp" ng-controller="regCtrl as register">
+  <body ng-app="userApp" ng-controller="regCtrl as register" class="text-center">
 
-  <main>
+  <main class="form-signin">
     <div>
-        <h1>User Registration</h1>
+        <h1 class="h3 mb-3 fw-normal">User Registration</h1>
     </div>
-    <form ng-submit="register.regUser(regData);">
+    <form class="form-signin w-100 m-auto" ng-submit="register.regUser(regData);">
       <img class="mb-4" src="assets/image/icon.jpg" alt="" width="190" height="200">
       <br>
-      <label>Email: </label>
-      <input class="form-control" type="text " name="email" placeholder="name@example.com" ng-model="register.regData.email">
+      <div class="form-floating">
+        <label for="floatingInput">Email: </label>
+        <input class="form-control" type="text " name="email" placeholder="name@example.com" ng-model="register.regData.email">
+      </div>
       <br>
-      <label>Username: </label>
-      <input class="form-control" type="text " name="username" placeholder="Jane Doe" ng-model="register.regData.username">
+      <div class="form-floating">
+        <label for="floatingPassword">Username: </label>
+        <input class="form-control" type="text " name="username" placeholder="username" ng-model="register.regData.username">
+      </div>
       <br>
-      <label>Password: </label>
-      <input class="form-control" type="text " name="password" placeholder="Password" ng-model="register.regData.password">
+      <div class="form-floating">
+        <label>Password: </label>
+        <input class="form-control" type="text " name="password" placeholder="Password" ng-model="register.regData.password">
+      </div>
       <br>
-      <button class="btn btn-primary" type="submit">Register</button>
+      <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
     </form>
+    <br>
+    <div class="row show-hide-message" ng-show="register.successMsg || register.errorMsg">
+        <div ng-class="alert">{{ register.successMsg || register.errorMsg }}</div>
+    </div> 
   </main>
   </body>
 </html>
