@@ -1,0 +1,44 @@
+<!-- Heading -->
+<div class="row text-center">
+    <div class="container">
+        <br>
+        <h3 class="section-subheading text-muted">Please enter your Log In information.</h3>
+    </div>
+</div>
+<!-- Heading -->
+
+<!-- Main Section -->
+<section id="contact">
+    <!-- Start of Container -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <form ng-submit="main.doLogin(loginData);">
+                    <img class="mb-4" src="assets/image/icon.jpg" alt="" width="190" height="200">
+                    <br>
+                    <label for="floatingInput">Email: </label>
+                    <input class="form-control" type="text " name="email" placeholder="name@example.com" ng-model="main.loginData.email">
+                    <br>
+                    <label for="floatingPassword">Username: </label>
+                    <input class="form-control" type="text " name="username" placeholder="username" ng-model="main.loginData.username">
+                    <br>
+                    <label>Password: </label>
+                    <input class="form-control" type="text " name="password" placeholder="Password" ng-model="main.loginData.password">
+                    <br>
+                    <button class="w-100 btn btn-lg btn-primary" type="submit">Log In</button>
+                </form>
+            </div>
+        </div>
+
+        <br>
+
+        <!-- Custom Messages -->
+        <div class="row show-hide-message" ng-show="main.successMsg || main.errorMsg">
+            <div ng-class="alert">{{ main.successMsg || main.errorMsg }}</div>
+        </div>
+        <!-- Custom Messages -->
+
+    </div>
+    <!-- End of Container -->
+</section>
+<!-- Main Section /-->

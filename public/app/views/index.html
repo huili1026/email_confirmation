@@ -24,6 +24,7 @@
 
     <!-- Angular Services -->
     <script src="app/services/userServices.js"></script>
+    <script src="app/services/authServices.js"></script>
 
 
     <!-- Cascade Style Sheets -->
@@ -56,11 +57,17 @@
                 <li class="hidden active">
                     <a href="#page-top"></a>
                 </li>
-                <li class="">
+                <!-- <li class="">
                     <a class="page-scroll" href="/about">About</a>
-                </li>
+                </li> -->
                 <li class="">
                   <a class="page-scroll" href="/register">Register</a>
+                </li>
+                <li class="">
+                  <a class="page-scroll" href="/login">Login</a>
+                </li>
+                <li class="">
+                  <a class="page-scroll" href="#" ng-click="main.logout();">Logout</a>
                 </li>
             </ul>
         </div>
@@ -69,7 +76,7 @@
     </div>
     <!-- /.container-fluid -->
 </nav>
-
+  
   <div ng-view></div>
   <script src="assets/js/jquery-3.1.1.min.js"></script>
   <script src="assets/js/bootstrap.js"></script>

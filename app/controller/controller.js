@@ -5,8 +5,7 @@ var jwt = require('jsonwebtoken'); // Import JWT Package
 var secret = 'harrypotter'; // Create custom secret for use in JWT
 var nodemailer = require('nodemailer'); // Import Nodemailer Package
 var sgTransport = require('nodemailer-sendgrid-transport'); // Import Nodemailer Sengrid Transport Package
-const sgMail = require('@sendgrid/mail')
-
+const sgMail = require('@sendgrid/mail');
 
 // Create and Save a new User
 exports.create = async (req, res) => {
@@ -47,7 +46,7 @@ exports.create = async (req, res) => {
             from: 'gretalee1026@gmail.com', // Change to your verified sender
             subject: 'Your Activation Link',
             text: 'Hello ' + user.name + ', thank you for registering at localhost.com. Please click on the following link to complete your activation: http://localhost:8080/activate/' + user.temporarytoken,
-            html: 'Hello<strong> ' + user.name + '</strong>,<br><br>Thank you for registering at localhost.com. Please click on the link below to complete your activation:<br><br><a href="http://localhost:8080/activate/' + user.temporarytoken + '">http://localhost:8080/activate/'+ user.temporarytoken + '</a>'
+            html: 'Hello<strong> ' + user.name + '</strong>,<br><br>Thank you for registering at localhost.com. Please click on the link below to complete your activation:<br><br><a href="http://localhost:8080/#/activate/' + user.temporarytoken + '">http://localhost:8080/#/activate/'+ user.temporarytoken + '</a>'
         }
         sgMail.send(msg).then(() => {
             console.log('Email sent')
@@ -61,27 +60,47 @@ exports.create = async (req, res) => {
 };
   
 exports.findOne = async (req, res) => {
-  console.log('should get the token here!');
-  User.findBytoken(req.params.temporarytoken, (err, data) => {
-    
-    if(err) throw err;
-    console.log('data=>' + data);
-    var token = req.params.temporarytoken;
-    console.log(token);
-    if (err.kind === "not_found") {
-        res.json({ success: false, message: 'Activation link has expired.' });
-    } else if (!data){
-        res.json({ success: false, message: 'Activation link has expired.' });
-    } else {
-      var user = new User(res.body);
-      jwt.verify(token, secret, function(err, decoded) {
-          if(err) throw err; 
-          data.temporarytoken = null; 
-          data.confirmed = true;
-          res.json({ success: true, user: user }); // Return user object to controller
-
+    console.log('should get the token here!');
+    User.findByToken(req.params.temporarytoken, (err, user) => {
+      if(err) throw err;
+      var token = req.params.temporarytoken;
+      console.log('token --> ' + token);
+      if (err.kind === "not_found") {
+          res.json({ success: false, message: 'Activation link has expired.' });
+      } else if (!data){
+          res.json({ success: false, message: 'Activation link has expired.' });
+      } else {
+          jwt.verify(token, secret, function(err, decoded) {
+              if(err) throw err; 
+              user.temporarytoken = null; 
+              user.confirmed = true;
+              res.json({ success: true, user: user }); // Return user object to controller
       });
     };
   });
 };
 
+
+// user login authentication
+// http://localhost:8080/api/authenticate
+exports.findUser = (req, res) => {
+  User.findByUsername(req.body.username, function(err, user){
+    if (err) {
+      if (err.kind === "not_found") {
+        res.json({ success: false, message:'Could not found user'});
+      } else {
+        res.json({ success: false, message:'Could not authenticate user'});
+      }
+    } else {
+      var validPassword = bcrypt.compareSync(req.body.password, user.password);
+      if (!validPassword) {
+        res.json({ success: false, message:'Could not authenticate user'});
+      } else{
+        var token = jwt.sign({ username: user.username, emal : user.email }, secret, { expiresIn: "12h"});
+        res.json({ success: true, message:'User authenticated!', token: token});
+      }
+    }
+  });
+};
+
+ 
