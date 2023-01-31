@@ -13,7 +13,7 @@ angular.module('userControllers', ['userServices'])
                 app.successMsg = data.data.message;
 
                 $timeout(function(){
-                    $location.path("/");
+                    $location.path("/about");
                 }, 2000);
             } else {
                 app.loading = false;

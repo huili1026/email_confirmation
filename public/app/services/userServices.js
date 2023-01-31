@@ -7,5 +7,9 @@ angular.module('userServices', [])
         return $http.post('/api/users', regData);
     };
 
+    // User.activeAccount(token)
+    userFactory.activeAccount = function(token) { 
+        return $http.put('/api/activate/' + token);
+    }
     return userFactory;
 });

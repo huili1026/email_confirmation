@@ -1,5 +1,4 @@
 const sql = require("../../dbService");
-const bcrypt = require("bcrypt");
 
 // constructor
 const User = function(user) {
@@ -43,7 +42,7 @@ User.findByUsername = (name, result) => {
 };
 
 User.findByToken = (token, result) => {
-  sql.query(`SELECT * FROM user WHERE temporarytoken = '${token}'`, (err, res) => {
+  sql.query(`SELECT username, email, temporarytoken, confirmed FROM user WHERE temporarytoken = '${token}'`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -61,5 +60,27 @@ User.findByToken = (token, result) => {
 });
 };
 
+User.updateByToken = (token, result) => {
+  sql.query(
+    "UPDATE user SET temporarytoken = ?, confirmed = ? WHERE temporarytoken = ?",
+    [null, true, token],
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        // not found User with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+
+      console.log("updated user: ", { temporarytoken: token });
+      result(null, { token: token});
+    }
+  );
+};
 
 module.exports = User;

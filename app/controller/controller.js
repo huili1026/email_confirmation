@@ -45,8 +45,8 @@ exports.create = async (req, res) => {
             to: user.email,
             from: 'gretalee1026@gmail.com', // Change to your verified sender
             subject: 'Your Activation Link',
-            text: 'Hello ' + user.name + ', thank you for registering at localhost.com. Please click on the following link to complete your activation: http://localhost:8080/activate/' + user.temporarytoken,
-            html: 'Hello<strong> ' + user.name + '</strong>,<br><br>Thank you for registering at localhost.com. Please click on the link below to complete your activation:<br><br><a href="http://localhost:8080/#/activate/' + user.temporarytoken + '">http://localhost:8080/#/activate/'+ user.temporarytoken + '</a>'
+            text: 'Hello ' + user.username + ', thank you for registering at localhost.com. Please click on the following link to complete your activation: http://localhost:8080/activate/' + user.temporarytoken,
+            html: 'Hello<strong> ' + user.username + '</strong>,<br><br>Thank you for registering at localhost.com. Please click on the link below to complete your activation:<br><br><a href="http://localhost:8080/#/activate/' + user.temporarytoken + '">http://localhost:8080/#/activate/</a>'
         }
         sgMail.send(msg).then(() => {
             console.log('Email sent')
@@ -60,26 +60,37 @@ exports.create = async (req, res) => {
 };
   
 exports.findOne = async (req, res) => {
-    console.log('should get the token here!');
-    User.findByToken(req.params.temporarytoken, (err, user) => {
+    User.findByToken(req.params.token, (err, user) => {
       if(err) throw err;
-      var token = req.params.temporarytoken;
-      console.log('token --> ' + token);
-      if (err.kind === "not_found") {
-          res.json({ success: false, message: 'Activation link has expired.' });
-      } else if (!data){
-          res.json({ success: false, message: 'Activation link has expired.' });
-      } else {
-          jwt.verify(token, secret, function(err, decoded) {
-              if(err) throw err; 
-              user.temporarytoken = null; 
-              user.confirmed = true;
-              res.json({ success: true, user: user }); // Return user object to controller
+      var token = req.params.token;
+      jwt.verify(token, secret, function(err, decoded) {
+        if(err) {
+          res.json({ success: false, message:'Activation link has expired.' });
+        } else if(!user) {
+          res.json({ success: false, message:'Activation link has expired.' });
+        } else {
+          User.updateByToken(token,(err, data) => {
+            if (err) throw err;
+            }
+          );
+          sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+          const msg = {
+              to: user.email,
+              from: 'gretalee1026@gmail.com', // Change to your verified sender
+              subject: 'Successful Activated!',
+              text: 'Hello ' + user.username + ', your account has been successfully activated!',
+              html: 'Hello<strong> ' + user.username + '</strong>,<br><br>your account has been successfully activated!'
+          };
+          sgMail.send(msg).then(() => {
+              console.log('Email sent')
+          }) .catch((error) => {
+              console.error(error)
+          })
+          res.json({ success: true, user: user, message:'Account activated!' }); // Return user object to controller
+        }
       });
-    };
-  });
+    });
 };
-
 
 // user login authentication
 // http://localhost:8080/api/authenticate
