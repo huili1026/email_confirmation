@@ -3,12 +3,10 @@ const bcrypt = require("bcrypt");
 require('dotenv').config();
 var jwt = require('jsonwebtoken'); // Import JWT Package
 var secret = 'harrypotter'; // Create custom secret for use in JWT
-var nodemailer = require('nodemailer'); // Import Nodemailer Package
-var sgTransport = require('nodemailer-sendgrid-transport'); // Import Nodemailer Sengrid Transport Package
 const sgMail = require('@sendgrid/mail');
 
 // Create and Save a new User
-exports.create = async (req, res) => {
+exports.create = (req, res) => {
     // Validate request
     if (!req.body.username || !req.body.password || !req.body.email) {
       res.json({ success: false, message: 'Ensure username, email, and password were provided' });
@@ -16,7 +14,7 @@ exports.create = async (req, res) => {
 
     var value = req.body.password; 
     const salt = bcrypt.genSalt(10);
-    var hash = await bcrypt.hash(value, parseInt(salt));
+    var hash = bcrypt.hash(value, parseInt(salt));
 
     // Create a User 
     const user = new User({
@@ -35,7 +33,7 @@ exports.create = async (req, res) => {
     user.temporarytoken = token;
       
     // Save User in the database
-    await User.create(user, (err, data) => {
+    User.create(user, (err, data) => {
       if (err) {
         res.json({ success: false, message: 'Username or email already exists!' });
       } else { 
@@ -59,7 +57,7 @@ exports.create = async (req, res) => {
     });
 };
   
-exports.findOne = async (req, res) => {
+exports.findOne = (req, res) => {
     User.findByToken(req.params.token, (err, user) => {
       if(err) throw err;
       var token = req.params.token;

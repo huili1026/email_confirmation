@@ -10,7 +10,7 @@ angular.module('userControllers', ['userServices'])
 
             if (data.data.success) {
                 app.loading = false;
-                app.successMsg = data.data.message;
+                app.successMsg = data.data.message + '....Redirecting';
 
                 $timeout(function(){
                     $location.path("/about");
