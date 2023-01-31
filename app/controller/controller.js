@@ -61,35 +61,27 @@ exports.create = async (req, res) => {
 };
   
 exports.findOne = async (req, res) => {
+  console.log('should get the token here!');
   User.findBytoken(req.params.temporarytoken, (err, data) => {
+    
+    if(err) throw err;
+    console.log('data=>' + data);
     var token = req.params.temporarytoken;
     console.log(token);
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found user with id ${req.params.temporarytoken}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Error retrieving Tutorial with id " + req.params.temporarytoken
-        });
-      }
+    if (err.kind === "not_found") {
+        res.json({ success: false, message: 'Activation link has expired.' });
+    } else if (!data){
+        res.json({ success: false, message: 'Activation link has expired.' });
     } else {
       var user = new User(res.body);
       jwt.verify(token, secret, function(err, decoded) {
-        if (err) {
-            res.json({ success: false, message: 'Password link has expired' }); // Token has expired or is invalid
-        } else {
-            if (!user) {
-                res.json({ success: false, message: 'Password link has expired' }); // Token is valid but not no user has that token anymore
-            } else {
-              user.temporarytoken = null;
-              user.confirmed = true;
-              res.json({ success: true, user: user }); // Return user object to controller
-            }
-        }
-    }); 
-    }  
+          if(err) throw err; 
+          data.temporarytoken = null; 
+          data.confirmed = true;
+          res.json({ success: true, user: user }); // Return user object to controller
+
+      });
+    };
   });
 };
 

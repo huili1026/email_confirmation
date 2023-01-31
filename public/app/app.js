@@ -1,1 +1,1 @@
-angular.module('userApp', ['userControllers', 'appRoutes'])
+angular.module('userApp', ['appRoutes','userControllers', 'emailControllers', 'userServices','mainController'])

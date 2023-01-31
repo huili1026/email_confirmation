@@ -1,15 +1,16 @@
-angular.module('userControllers', [])
-.controller('regCtrl', function($http, $location, $timeout) {
+angular.module('userControllers', ['userServices'])
+.controller('regCtrl', function($location, $timeout, User) {
     var app = this;
-    this.regUser = function(regData) { 
+
+    this.regUser = function() { 
         app.errorMsg = false;
         app.loading = true;
-        console.log("data submmited!");
-        $http.post('/api',this.regData).then(function(data){
+
+        User.create(app.regData).then(function(data){
 
             if (data.data.success) {
                 app.loading = false;
-                app.successMsg = data.data.message + '...Redirecting';
+                app.successMsg = data.data.message;
 
                 $timeout(function(){
                     $location.path("/");

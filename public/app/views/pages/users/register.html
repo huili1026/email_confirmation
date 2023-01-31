@@ -1,3 +1,44 @@
-<div class="page-header">
-    <h1>hello from register route</h1>
+<!-- Heading -->
+<div class="row text-center">
+    <div class="container">
+        <br>
+        <h3 class="section-subheading text-muted">Please enter your registration information.</h3>
+    </div>
 </div>
+<!-- Heading -->
+
+<!-- Main Section -->
+<section id="contact">
+    <!-- Start of Container -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <form ng-submit="register.regUser(regData);">
+                    <img class="mb-4" src="assets/image/icon.jpg" alt="" width="190" height="200">
+                    <br>
+                    <label for="floatingInput">Email: </label>
+                    <input class="form-control" type="text " name="email" placeholder="name@example.com" ng-model="register.regData.email">
+                    <br>
+                    <label for="floatingPassword">Username: </label>
+                    <input class="form-control" type="text " name="username" placeholder="username" ng-model="register.regData.username">
+                    <br>
+                    <label>Password: </label>
+                    <input class="form-control" type="text " name="password" placeholder="Password" ng-model="register.regData.password">
+                    <br>
+                    <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
+                </form>
+            </div>
+        </div>
+
+        <br>
+
+        <!-- Custom Messages -->
+        <div class="row show-hide-message" ng-show="register.successMsg || register.errorMsg">
+            <div ng-class="alert">{{ register.successMsg || register.errorMsg }}</div>
+        </div>
+        <!-- Custom Messages -->
+
+    </div>
+    <!-- End of Container -->
+</section>
+<!-- Main Section /-->

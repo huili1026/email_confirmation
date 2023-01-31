@@ -17,9 +17,10 @@ app.get('/', function(req, res){
   res.sendFile(path.join(__dirname + '/public/app/views/index.html'));
 });
 
-app.get('/activate/:token', function(req, res){
-  res.sendFile(path.join(__dirname + '/public/app/views/pages/home.html'));
-});
+// app.get('/activate/:token', function(req, res){
+//   console.log('click link=>' + req.params.token);
+//   res.sendFile(path.join(__dirname + '/public/app/views/pages/home.html'));
+// });
 
 
 // use 8080 or the environment to which you deploying to has 
