@@ -6,7 +6,7 @@ var secret = 'harrypotter'; // Create custom secret for use in JWT
 const sgMail = require('@sendgrid/mail');
 
 // Create and Save a new User
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
     // Validate request
     if (!req.body.username || !req.body.password || !req.body.email) {
       res.json({ success: false, message: 'Ensure username, email, and password were provided' });
@@ -14,7 +14,7 @@ exports.create = (req, res) => {
 
     var value = req.body.password; 
     const salt = bcrypt.genSalt(10);
-    var hash = bcrypt.hash(value, parseInt(salt));
+    var hash = await bcrypt.hash(value, parseInt(salt));
 
     // Create a User 
     const user = new User({
